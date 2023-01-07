@@ -275,6 +275,11 @@ public class RelationBinaire {
                 }
             }
         }
+        for(int i = 0; i < m1.length; i++) {
+            for(int j = 0; j < m1.length; j++) {
+                System.out.println(optab[i][j]);
+            }
+        }
         return optab;
     }
 
@@ -285,18 +290,7 @@ public class RelationBinaire {
      résultat : le produit matriciel de m1 et m2
      */
     public static boolean[][] produit(boolean[][] m1, boolean[][] m2){
-        boolean[][] prodMat = new boolean[m1.length][m1.length];
-        for (int i = 0; i < m1.length; i++) {
-            for (int j = 0; j < m1.length; j++) {
-                if(m1[i][j] == m2[i][j]) {
-                    prodMat[i][j] = true;
-                }
-                else {
-                    prodMat[i][j] = false;
-                }
-            }
-        }
-        return prodMat;
+        return opBool(m1, m2, 5);
     }
 
     //______________________________________________
@@ -358,6 +352,7 @@ public class RelationBinaire {
         if(!appartient(x, y)) {
             this.matAdj[x][y] = true;
             this.tabSucc[x].ajoutElt(y);
+            this.m++;
 
         }
     }
@@ -372,6 +367,7 @@ public class RelationBinaire {
         if(appartient(x, y)) {
             this.matAdj[x][y] = false;
             this.tabSucc[x].retraitElt(y);
+            this.m--;
         }
     }
 
@@ -384,10 +380,12 @@ public class RelationBinaire {
      */
     public RelationBinaire avecBoucles(){
         for(int i = 0; i < this.matAdj.length; i++) {
-            matAdj[i][i] = true;
-            this.tabSucc[i].ajoutElt(i);
+            if(!this.matAdj[i][i]) {
+                this.matAdj[i][i] = true;
+                this.tabSucc[i].ajoutElt(i);
+                this.m++;
+            }
         }
-
         return this;
     }
     //______________________________________________
@@ -400,8 +398,11 @@ public class RelationBinaire {
      */
     public RelationBinaire sansBoucles(){
         for(int i = 0; i < this.matAdj.length; i++) {
-            matAdj[i][i] = false;
-            this.tabSucc[i].retraitElt(i);
+            if(this.matAdj[i][i]) {
+                this.matAdj[i][i] = false;
+                this.tabSucc[i].retraitElt(i);
+                this.m--;
+            }
         }
         return this;
     }
@@ -413,8 +414,7 @@ public class RelationBinaire {
      résultat : l'union de this et r
      */
     public RelationBinaire union(RelationBinaire r){
-
-
+        return RelationBinaire(opBool(this.matAdj, r.matAdj, 1));
     }
     
 
@@ -425,18 +425,7 @@ public class RelationBinaire {
      résultat : l'intersection de this et r
      */
     public RelationBinaire intersection(RelationBinaire r){
-        for(int i = 0; i < this.matAdj.length; i++) {
-            for(int j = 0; j < this.matAdj.length; j++) {
-                if(this.matAdj[i][j] && r.matAdj[i][i]) {
-                    this.matAdj[i][j] = true;
-                    ajouteCouple(i, j);
-                } else {
-                    this.matAdj[i][j] = false;
-                    enleveCouple(i, j);
-                }
-            }      
-        }
-        return this;
+        return RelationBinaire(opBool(this.matAdj, r.matAdj, 2));
     }
 
     //______________________________________________
@@ -447,18 +436,7 @@ public class RelationBinaire {
      résultat : la relation complémentaire de this
      */
     public RelationBinaire complementaire(){
-        for(int i = 0; i < this.matAdj.length; i++) {
-            for(int j = 0; j < this.matAdj.length; j++) {
-                if(this.matAdj[i][j]) {
-                    this.matAdj[i][j] = false;
-                    enleveCouple(i, j);
-                } else {
-                    this.matAdj[i][j] = true;
-                    ajouteCouple(i, j);
-                }
-            }       
-        }
-        return this;
+        return RelationBinaire(opBool(this.matAdj, r.matAdj, 3));
     }
 
     //______________________________________________
@@ -474,6 +452,7 @@ public class RelationBinaire {
                     enleveCouple(i, j);
                 }
             }
+        }
     }
 
     //______________________________________________
@@ -483,8 +462,7 @@ public class RelationBinaire {
      résultat : vrai ssi this est incluse dans r
      */
     public boolean estIncluse(RelationBinaire r){
-
-        
+        throw new RuntimeException("La fonction n'est pas encore implémentée !");
     }
 
     //______________________________________________
