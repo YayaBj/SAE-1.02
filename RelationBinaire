@@ -201,21 +201,16 @@ public class RelationBinaire {
         }
         s += "L'ensemble de couples est:\n{";
         for(int i = 0; i < this.n; i++){
-            s += "(";
             for(int j = 0; j < this.n; j++){
-                if(matAdj[i][j]){
-                    s += "1";
-                }
-                else{
-                    s += "0";
-                }
-                if(j != n-1){
-                    s += ",";
+                if(this.tabSucc[i].contient(j)){
+                    s = s + "(" + i + "," + j + ")";
+                    if(i != this.n - 1 || j != this.n - 1) {
+                        s += ",";
+                    }
                 }
             }
-            s += ")";
         }
-        s += "}";
+        s += "} \n";
         return s;  
     }
 
@@ -448,7 +443,7 @@ public class RelationBinaire {
 
 
     /** pré-requis : aucun
-     résultat : la relation complémentaire de this
+     résultat : la relation cqomplémentaire de this
      */
     public RelationBinaire complementaire(){
         return new RelationBinaire(opBool(this.matAdj, this.matAdj, 3));
@@ -461,7 +456,7 @@ public class RelationBinaire {
      résultat : la différence de this et r
      */
     public RelationBinaire difference(RelationBinaire r){
-        
+        return new RelationBinaire(opBool(this.matAdj, r.matAdj,5));
     }
 
     //______________________________________________
@@ -514,6 +509,13 @@ public class RelationBinaire {
         }
         return succ;
     }
+
+    /* retourne l'ensemble des descendants d'un élément x de E dans la relation
+
+    public EE descendant (int x) {
+
+        return desc;
+    } */
 
     //______________________________________________
 
@@ -684,7 +686,7 @@ public class RelationBinaire {
      Hasse, fermeture transitive de Hasse et fermeture transitive de Hasse avec boucles (sous 2 formes aussi)
      */
     public void afficheDivers(){
-        this.toString();
+        System.out.println(this.toString()); 
         if(this.estReflexive()) {
             System.out.println("Cette relation est reflexive");
         }
@@ -716,27 +718,18 @@ public class RelationBinaire {
             System.out.println("Cette relation n'est pas transitive");
         }
         if(this.estRelOrdre()) {
-            System.out.println("Cette relation est une relation d'ordre");
+            System.out.println("Cette relation est une relation d'ordre \n");
         }
         else {
-            System.out.println("Cette relation n'est pas une relation d'ordre");
+            System.out.println("Cette relation n'est pas une relation d'ordre \n");
         }
-        RelationBinaire hassse = this.hasse();
-        RelationBinaire ferTr = this.ferTrans();
-        System.out.println(hassse.toString());
-        System.out.println(ferTr.toString());
-    }
-
-    //______________________________________________
-
-    public static void main(String[] args) {
-
-        int nb;
-        double p;
-        do {
-            Ut.afficher("\nDonner le cardinal de E (>0) : ");
-            nb = Ut.saisirEntier();
-        }
-        while (nb <= 0);
+        RelationBinaire hasse = this.hasse();
+        System.out.println("Hasse : \n");
+        System.out.println(hasse.toString());
+        System.out.println("Fermeture transitive de hasse : \n");
+        System.out.println(hasse.ferTrans().toString());
+        hasse.avecBoucles();
+        System.out.println("Fermeture transitive de hasse avec boucle : \n");
+        System.out.println(hasse.ferTrans().toString());
     }
 } // fin RelationBinaire
