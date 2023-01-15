@@ -1,0 +1,46 @@
+import java.util.*;
+
+import javax.management.relation.Relation;
+
+import java.lang.*;
+
+public class MainRelationBinaire {
+
+
+    /** 
+	action : demande à l'utilisateur de saisir un entier nb > 0 et un réel p strictement compris entre 0 et 1 (avec vérification des saisie),
+                 puis crée 5 relations binaires dans l'ensemble {0,1,2, ..., nb-1}, R0 vide, R1= '=', R2 = '<=', R3 une relation 
+                 binaire aléatoire à laquelle chaque couple a la probabilité p d'appartenir et R4 pleine, puis, pour i de 0 à 4,
+                 affiche Ri sous 2 formes (matrice et ensemble de couples), puis affiche ses propriétés 
+                 (réflexive, ..., relation d'ordre) et les relations binaires suivantes obtenues à partir de Ri :
+                Hasse, fermeture transitive de Hasse et fermeture transitive de Hasse avec boucles (sous 2 formes aussi)
+    */
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Veuiller saisir nombre strictement supérieur à 0");
+        int nb = sc.nextInt();
+        while( nb <= 0) {
+            System.out.println("Le nombre est inférieur ou égal à 0, veuiller ressasir un nombre supérieur à 0");
+            nb = sc.nextInt();
+        }
+        System.out.println("Veuiller saisir un chiffre entre 0 et 1");
+        double p = sc.nextDouble();
+        while( p <= 0 || p >= 1) {
+            System.out.println("Le chifffre n'est pas compris entre 0 et 1, veuiller ressasir un chiffre compris entre ces deux chiffres");
+            p = sc.nextDouble();
+        }
+        RelationBinaire R0 = new RelationBinaire(nb);
+        RelationBinaire R1 = new RelationBinaire(nb,true);
+        RelationBinaire R2 = new RelationBinaire(nb, false);
+        RelationBinaire R3 = new RelationBinaire(nb,p);
+        RelationBinaire R4 = new RelationBinaire(nb,1);
+        RelationBinaire[] tab = new RelationBinaire[] {R0, R1, R2, R3, R4};
+
+        for(int i = 0; i < 5; i++){
+            System.out.println("R" + i);
+            tab[i].afficheDivers();
+        }
+    }
+
+    
+} // fin MainRelationBinaire
